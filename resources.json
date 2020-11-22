@@ -1,0 +1,11 @@
+{
+	"files": [
+		{
+			"pattern": "file-staging-local/gcc-arm-none-eabi-9/2020-q2/",
+			"build": "gcc-arm-none-eabi-9",
+			"target": "external/gcc-arm-none-eabi-9/",
+			"flat": "true",
+			"explode": "true"
+		}
+	]
+}
