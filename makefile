@@ -1,9 +1,8 @@
-# SPDX-License-Identifier: GPL-2.0
-VERSION = 5
-PATCHLEVEL = 11
+VERSION = 0
+PATCHLEVEL = 1
 SUBLEVEL = 0
-EXTRAVERSION = -rc1
-NAME = Kleptomaniac Octopus
+EXTRAVERSION =
+NAME =
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
@@ -182,7 +181,7 @@ $(filter-out $(this-makefile), $(MAKECMDGOALS)) __all: __sub-make
 
 # Invoke a second make in the output directory, passing relevant variables
 __sub-make:
-	$(Q)$(MAKE) -C $(abs_objtree) -f $(abs_srctree)/Makefile $(MAKECMDGOALS)
+	$(Q)$(MAKE) -C $(abs_objtree) -f $(abs_srctree)/makefile $(MAKECMDGOALS)
 
 endif # need-sub-make
 endif # sub_make_done
@@ -334,19 +333,19 @@ $(MAKECMDGOALS): __build_one_by_one
 __build_one_by_one:
 	$(Q)set -e; \
 	for i in $(MAKECMDGOALS); do \
-		$(MAKE) -f $(srctree)/Makefile $$i; \
+		$(MAKE) -f $(srctree)/makefile $$i; \
 	done
 
 else # !mixed-build
 
-include scripts/Kbuild.include
+include forge/build_utils.mk
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
 KERNELRELEASE = $(shell cat include/config/kernel.release 2> /dev/null)
 KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
 export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
 
-include scripts/subarch.include
+include forge/subarch.mk
 
 # Cross compiling and selecting different set of gcc/bin-utils
 # ---------------------------------------------------------------------------
@@ -554,7 +553,7 @@ ifdef building_out_of_srctree
 		false; \
 	fi
 	$(Q)ln -fsn $(srctree) source
-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
+	$(Q)$(CONFIG_SHELL) $(srctree)/forge/mkmakefile.sh $(srctree)
 	$(Q)test -e .gitignore || \
 	{ echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
 endif
@@ -592,7 +591,7 @@ ifdef config-build
 # Read arch specific Makefile to set KBUILD_DEFCONFIG as needed.
 # KBUILD_DEFCONFIG may point out an alternative default configuration
 # used for 'make defconfig'
-include arch/$(SRCARCH)/Makefile
+include arch/$(SRCARCH)/makefile
 export KBUILD_DEFCONFIG KBUILD_KCONFIG CC_VERSION_TEXT
 
 config: outputmakefile scripts_basic FORCE
@@ -678,7 +677,7 @@ RETPOLINE_VDSO_CFLAGS := $(call cc-option,$(RETPOLINE_VDSO_CFLAGS_GCC),$(call cc
 export RETPOLINE_CFLAGS
 export RETPOLINE_VDSO_CFLAGS
 
-include arch/$(SRCARCH)/Makefile
+include arch/$(SRCARCH)/makefile
 
 ifdef need-config
 ifdef may-sync-config
@@ -955,7 +954,7 @@ KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
 endif
 
 # include additional Makefiles when needed
-include-y			:= scripts/Makefile.extrawarn
+include-y			:= forge/flags_extrawarn.mk
 include-$(CONFIG_KASAN)		+= scripts/Makefile.kasan
 include-$(CONFIG_KCSAN)		+= scripts/Makefile.kcsan
 include-$(CONFIG_UBSAN)		+= scripts/Makefile.ubsan
