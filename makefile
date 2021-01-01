@@ -248,7 +248,7 @@ VPATH		:= $(srctree)
 export building_out_of_srctree srctree objtree VPATH
 
 # To make sure we do not include .config for any of the *config targets
-# catch them early, and hand them over to scripts/kconfig/Makefile
+# catch them early, and hand them over to forge/kconfig/makefile
 # It is allowed to specify more targets when calling make, including
 # mixing *config targets and build targets.
 # For example 'make oldconfig all'.
@@ -586,7 +586,7 @@ CC_VERSION_TEXT = $(shell $(CC) --version 2>/dev/null | head -n 1)
 ifdef config-build
 # ===========================================================================
 # *config targets only - make sure prerequisites are updated, and descend
-# in scripts/kconfig to make the *config target
+# in forge/kconfig to make the *config target
 
 # Read arch specific Makefile to set KBUILD_DEFCONFIG as needed.
 # KBUILD_DEFCONFIG may point out an alternative default configuration
@@ -595,10 +595,10 @@ include arch/$(SRCARCH)/makefile
 export KBUILD_DEFCONFIG KBUILD_KCONFIG CC_VERSION_TEXT
 
 config: outputmakefile scripts_basic FORCE
-	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+	$(Q)$(MAKE) $(build)=forge/kconfig $@
 
 %config: outputmakefile scripts_basic FORCE
-	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+	$(Q)$(MAKE) $(build)=forge/kconfig $@
 
 else #!config-build
 # ===========================================================================
@@ -1321,7 +1321,7 @@ PHONY += kselftest-merge
 kselftest-merge:
 	$(if $(wildcard $(objtree)/.config),, $(error No .config exists, config your kernel first!))
 	$(Q)find $(srctree)/tools/testing/selftests -name config | \
-		xargs $(srctree)/scripts/kconfig/merge_config.sh -m $(objtree)/.config
+		xargs $(srctree)/forge/kconfig/merge_config.sh -m $(objtree)/.config
 	$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
 
 # ---------------------------------------------------------------------------
@@ -1548,7 +1548,7 @@ help:
 	@echo  '  distclean	  - mrproper + remove editor backup and patch files'
 	@echo  ''
 	@echo  'Configuration targets:'
-	@$(MAKE) -f $(srctree)/scripts/kconfig/Makefile help
+	@$(MAKE) -f $(srctree)/forge/kconfig/makefile help
 	@echo  ''
 	@echo  'Other generic targets:'
 	@echo  '  all		  - Build all targets marked with [*]'
