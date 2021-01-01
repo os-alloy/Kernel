@@ -528,10 +528,10 @@ export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
 # ===========================================================================
 # Rules shared between *config targets and build targets
 
-# Basic helpers built in scripts/basic/
+# Basic helpers built in forge/fixdep/
 PHONY += scripts_basic
 scripts_basic:
-	$(Q)$(MAKE) $(build)=scripts/basic
+	$(Q)$(MAKE) $(build)=forge/fixdep
 	$(Q)rm -f .tmp_quiet_recordmcount
 
 PHONY += outputmakefile
@@ -703,7 +703,7 @@ $(KCONFIG_CONFIG):
 # The syncconfig should be executed only once to make all the targets.
 # (Note: use the grouped target '&:' when we bump to GNU Make 4.3)
 quiet_cmd_syncconfig = SYNC    $@
-      cmd_syncconfig = $(MAKE) -f $(srctree)/Makefile syncconfig
+      cmd_syncconfig = $(MAKE) -f $(srctree)/makefile syncconfig
 
 %/config/auto.conf %/config/auto.conf.cmd %/generated/autoconf.h: $(KCONFIG_CONFIG)
 	+$(call cmd,syncconfig)
